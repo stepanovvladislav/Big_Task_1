@@ -19,6 +19,8 @@ class MainWindow(QMainWindow, Ui_MapGenerator):
         check = self.check(x_coord, y_coord, size)
         if check:
             self.doing_request(check[0], check[1], check[2])
+        else:
+            self.map_widget.setText('Некорректные данные')
 
     def check(self, x, y, z):
         try:
@@ -34,10 +36,13 @@ class MainWindow(QMainWindow, Ui_MapGenerator):
             return False
 
     def doing_request(self, x, y, z):
+        self.map_widget.setText('')
         # apikey = "40d1649f-0493-4b70-98ba-98533de7710b"
         response = requests.get(
-            f"https://static-maps.yandex.ru/1.x/?ll={y},{x}&size=600,600&scale={z}&l=map")
-        response = QPixmap(response)
+            f"https://static-maps.yandex.ru/1.x/?ll={y},{x}&size=450,450&scale={z}&l=map")
+        with open('file.png', 'wb') as f:
+            f.write(response.content)
+        response = QPixmap('file.png')
         self.map_widget.setPixmap(response)
 
 
